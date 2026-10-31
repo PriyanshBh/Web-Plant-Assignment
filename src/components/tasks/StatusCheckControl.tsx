@@ -38,7 +38,7 @@ export const StatusCheckControl: React.FC<StatusCheckControlProps> = ({
           onContextMenu={(e) => e.preventDefault()}
           disabled={disabled}
           className={cn(
-            "w-5 h-5 rounded-md border flex items-center justify-center transition-all duration-200 focus-visible:outline-2 focus-visible:outline-[var(--accent)] shrink-0 cursor-pointer",
+            "w-5 h-5 rounded-md border flex items-center justify-center transition-all duration-200 focus-visible:outline-2 focus-visible:outline-[var(--accent)] shrink-0 cursor-pointer touch-manipulation relative before:absolute before:-inset-3 sm:before:inset-0",
             isDone
               ? "bg-[var(--done-fg)] border-[var(--done-fg)] text-[var(--bg)]"
               : isInProgress

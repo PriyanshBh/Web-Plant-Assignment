@@ -75,7 +75,7 @@ export const TaskRow: React.FC<TaskRowProps> = ({
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
             <button
-              className="p-1 rounded-md text-[var(--ink-3)] hover:text-[var(--ink)] hover:bg-[var(--surface-2)] transition-colors focus-visible:outline-2 focus-visible:outline-[var(--accent)] cursor-pointer"
+              className="p-2 sm:p-1 -m-1 sm:m-0 rounded-md text-[var(--ink-3)] hover:text-[var(--ink)] hover:bg-[var(--surface-2)] transition-colors focus-visible:outline-2 focus-visible:outline-[var(--accent)] cursor-pointer min-w-[44px] min-h-[44px] sm:min-w-[32px] sm:min-h-[32px] flex items-center justify-center"
               aria-label={`Options for task ${task.title}`}
             >
               <MoreVertical className="w-4 h-4" />

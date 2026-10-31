@@ -56,7 +56,7 @@ export const ResponsiveModal: React.FC<ResponsiveModalProps> = ({
                 </DialogPrimitive.Description>
               )}
             </div>
-            <DialogPrimitive.Close className="rounded-md p-1.5 text-[var(--ink-3)] hover:text-[var(--ink)] hover:bg-[var(--surface-2)] transition-colors focus-visible:outline-2 focus-visible:outline-[var(--accent)]">
+            <DialogPrimitive.Close className="rounded-md p-2 -m-1 sm:m-0 text-[var(--ink-3)] hover:text-[var(--ink)] hover:bg-[var(--surface-2)] transition-colors focus-visible:outline-2 focus-visible:outline-[var(--accent)] min-w-[44px] min-h-[44px] sm:min-w-[32px] sm:min-h-[32px] flex items-center justify-center cursor-pointer">
               <X className="h-4 w-4" />
               <span className="sr-only">Close</span>
             </DialogPrimitive.Close>

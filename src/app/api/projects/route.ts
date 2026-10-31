@@ -26,10 +26,16 @@ export const GET = withAuth(async (_req: NextRequest, { userId }) => {
 
   const projectIds = projects.map((p) => p._id);
 
-  // 2. Aggregate task counts by project and status in a single performant query
+  const now = new Date();
+
+  // 2. Aggregate task counts and overdue counts by project in a single performant query
   const countsAggregate = await Task.aggregate<{
-    _id: { project: mongoose.Types.ObjectId; status: string };
-    count: number;
+    _id: mongoose.Types.ObjectId;
+    total: number;
+    todo: number;
+    inProgress: number;
+    done: number;
+    overdue: number;
   }>([
     {
       $match: {
@@ -39,8 +45,26 @@ export const GET = withAuth(async (_req: NextRequest, { userId }) => {
     },
     {
       $group: {
-        _id: { project: "$project", status: "$status" },
-        count: { $sum: 1 },
+        _id: "$project",
+        total: { $sum: 1 },
+        todo: { $sum: { $cond: [{ $eq: ["$status", "todo"] }, 1, 0] } },
+        inProgress: { $sum: { $cond: [{ $eq: ["$status", "in-progress"] }, 1, 0] } },
+        done: { $sum: { $cond: [{ $eq: ["$status", "done"] }, 1, 0] } },
+        overdue: {
+          $sum: {
+            $cond: [
+              {
+                $and: [
+                  { $ne: ["$status", "done"] },
+                  { $ne: ["$dueDate", null] },
+                  { $lt: ["$dueDate", now] },
+                ],
+              },
+              1,
+              0,
+            ],
+          },
+        },
       },
     },
   ]);
@@ -48,25 +72,17 @@ export const GET = withAuth(async (_req: NextRequest, { userId }) => {
   // Map counts per project id
   const countsMap = new Map<
     string,
-    { total: number; todo: number; inProgress: number; done: number }
+    { total: number; todo: number; inProgress: number; done: number; overdue: number }
   >();
 
   for (const item of countsAggregate) {
-    const projId = item._id.project.toString();
-    const status = item._id.status;
-    const current = countsMap.get(projId) || {
-      total: 0,
-      todo: 0,
-      inProgress: 0,
-      done: 0,
-    };
-
-    current.total += item.count;
-    if (status === "todo") current.todo += item.count;
-    else if (status === "in-progress") current.inProgress += item.count;
-    else if (status === "done") current.done += item.count;
-
-    countsMap.set(projId, current);
+    countsMap.set(item._id.toString(), {
+      total: item.total,
+      todo: item.todo,
+      inProgress: item.inProgress,
+      done: item.done,
+      overdue: item.overdue,
+    });
   }
 
   // Format projects with JSON transform and task counts
@@ -82,6 +98,7 @@ export const GET = withAuth(async (_req: NextRequest, { userId }) => {
         todo: 0,
         inProgress: 0,
         done: 0,
+        overdue: 0,
       },
       createdAt: proj.createdAt.toISOString(),
       updatedAt: proj.updatedAt.toISOString(),
@@ -117,6 +134,7 @@ export const POST = withAuth(async (req: NextRequest, { userId }) => {
       todo: 0,
       inProgress: 0,
       done: 0,
+      overdue: 0,
     },
   };
 

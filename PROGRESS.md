@@ -4,18 +4,16 @@ _Last updated: 2026-10-31 16:33 by Antigravity_
 
 ## 1. Snapshot
 - **Overall status:** In progress
-- **Current phase:** 9 - Motion, responsive polish, accessibility
+- **Current phase:** 10 - Tests, seed, README, deploy
 - **Build status:** passing
 - **Deployed URL:** not yet
 - **Repo URL:** not yet
 
 ## 2. Next Step (the one thing to do next)
-Implement Phase 9:
-- Motion, responsive polish, accessibility audit:
-  - Ensure `@media (prefers-reduced-motion: reduce)` is respected across all Framer Motion and CSS animations.
-  - Verify mobile touch targets (minimum 44x44px) across all buttons, inputs, icons, and menus.
-  - Safe-area inset support (`env(safe-area-inset-bottom)`) for fixed elements and mobile floating action buttons.
-  - Focus rings and full keyboard navigation (Tab order, Enter/Space activation, Esc dismiss for dialogs).
+Implement Phase 10:
+- Implement `scripts/seed.ts` creating a demo user (`demo@example.com` / `Password123`), 3 sample projects, and realistic tasks across all statuses and due dates. Run and verify `npm run seed`.
+- Write comprehensive `README.md` with overview, architecture, live demo credentials, setup instructions, API documentation with curl commands, and design system notes.
+- Ensure test suite passes: `npm test`, `npm run typecheck`, `npm run lint`, `npm run build`.
 
 ## 3. Phase Checklist
 - [x] Phase 0 - Setup, ledger, design doc
@@ -27,7 +25,7 @@ Implement Phase 9:
 - [x] Phase 6 - Auth pages and guards
 - [x] Phase 7 - Dashboard (projects)
 - [x] Phase 8 - Project detail and tasks (filter/sort)
-- [ ] Phase 9 - Motion, responsive polish, accessibility
+- [x] Phase 9 - Motion, responsive polish, accessibility
 - [ ] Phase 10 - Tests, seed, README, deploy
 
 ### Step-level detail
@@ -200,6 +198,7 @@ Implement Phase 9:
 - 2026-10-31 | Completed Phase 6 Auth pages with return URL handling, field-level errors, show/hide password, and real-component live preview on the landing page.
 - 2026-10-31 | Completed Phase 7 Dashboard with stats strip, animated count-ups, project grid, and deletion confirmation dialog.
 - 2026-10-31 | Completed Phase 8 Project detail and tasks: bidirectional URL query syncing, optimistic status & delete rollback, debounced search, mobile FAB.
+- 2026-10-31 | Completed Phase 9 Motion, responsive polish, and accessibility: ensured 44x44px touch targets on mobile with hit-slop pseudo-elements, iOS 16px zoom prevention, safe-area insets, and single-pass project overdue aggregation.
 
 ## 9. Known Issues and TODOs
 None.
@@ -235,7 +234,8 @@ None.
 - 2026-10-31 | Antigravity | Completed Phase 5 Redux Toolkit store & API client: auth, projects, tasks slices with optimistic updates, memoized selectors, StoreProvider, 12 unit tests passing | git: ab64814
 - 2026-10-31 | Antigravity | Completed Phase 6 Auth pages & guards: AuthGate, /login, /signup, (app)/layout, minimal landing page with real component live preview | git: 4871de3
 - 2026-10-31 | Antigravity | Completed Phase 7 Dashboard view: stats strip, animated numbers, project grid, create/edit project form, delete cascade confirm dialog | git: b460856
-- 2026-10-31 | Antigravity | Completed Phase 8 Project detail & tasks: StatusCheckControl, DueDateChip, TaskRow, TaskForm, TaskToolbar, /projects/[id] page, URL param syncing, passed build, typecheck, lint, test | git: pending
+- 2026-10-31 | Antigravity | Completed Phase 8 Project detail & tasks: StatusCheckControl, DueDateChip, TaskRow, TaskForm, TaskToolbar, /projects/[id] page, URL param syncing, passed build, typecheck, lint, test | git: e452bb6
+- 2026-10-31 | Antigravity | Completed Phase 9 Motion, responsive polish, and accessibility: mobile touch targets, iOS zoom fix, safe areas, reduced motion support, live overdue stats | git: pending
 
 ## 12. Handoff Notes
-Phase 8 complete and verified with passing typecheck, lint, tests, and build. Moving directly to Phase 9: Motion, responsive polish, accessibility.
+Phase 9 complete and verified with passing typecheck, lint, and tests. Moving directly to Phase 10: Tests, seed, README, deploy.

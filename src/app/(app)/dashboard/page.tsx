@@ -40,11 +40,13 @@ export default function DashboardPage() {
   const totalProjects = projects.length;
   let totalOpenTasks = 0;
   let totalDoneTasks = 0;
+  let totalOverdueTasks = 0;
 
   for (const p of projects) {
     if (p.taskCounts) {
       totalOpenTasks += p.taskCounts.todo + p.taskCounts.inProgress;
       totalDoneTasks += p.taskCounts.done;
+      totalOverdueTasks += p.taskCounts.overdue || 0;
     }
   }
 
@@ -116,7 +118,7 @@ export default function DashboardPage() {
       <StatsStrip
         totalProjects={totalProjects}
         openTasks={totalOpenTasks}
-        overdueTasks={0}
+        overdueTasks={totalOverdueTasks}
         doneTasks={totalDoneTasks}
       />
 

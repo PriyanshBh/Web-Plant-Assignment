@@ -48,7 +48,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
           <DropdownMenu.Trigger asChild>
             <button
               onClick={(e) => e.stopPropagation()}
-              className="p-1 rounded-md text-[var(--ink-3)] hover:text-[var(--ink)] hover:bg-[var(--surface-2)] transition-colors focus-visible:outline-2 focus-visible:outline-[var(--accent)] cursor-pointer shrink-0"
+              className="p-2 sm:p-1 -m-1 sm:m-0 rounded-md text-[var(--ink-3)] hover:text-[var(--ink)] hover:bg-[var(--surface-2)] transition-colors focus-visible:outline-2 focus-visible:outline-[var(--accent)] cursor-pointer shrink-0 min-w-[44px] min-h-[44px] sm:min-w-[32px] sm:min-h-[32px] flex items-center justify-center"
               aria-label={`Actions for project ${project.title}`}
             >
               <MoreVertical className="w-4 h-4" />
@@ -94,9 +94,16 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
         {/* Progress Summary and Bar */}
         <div className="space-y-2 mt-auto">
           <div className="flex items-center justify-between text-xs">
-            <span className="font-mono text-[var(--ink-2)] tabular-nums font-medium">
-              {counts.done} of {counts.total} done
-            </span>
+            <div className="flex items-center gap-1.5">
+              <span className="font-mono text-[var(--ink-2)] tabular-nums font-medium">
+                {counts.done} of {counts.total} done
+              </span>
+              {counts.overdue && counts.overdue > 0 ? (
+                <span className="font-mono text-[11px] text-[var(--danger)] font-medium">
+                  ({counts.overdue} overdue)
+                </span>
+              ) : null}
+            </div>
             <span className="text-[11px] text-[var(--ink-3)] font-mono">
               Updated {formattedUpdated}
             </span>

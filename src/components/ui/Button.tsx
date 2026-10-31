@@ -25,7 +25,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      "inline-flex items-center justify-center font-medium rounded-lg transition-colors focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.98] select-none cursor-pointer";
+      "inline-flex items-center justify-center font-medium rounded-lg transition-colors focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.98] select-none cursor-pointer touch-manipulation";
 
     const variantStyles = {
       primary:
@@ -44,7 +44,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       sm: "h-8 px-3 text-xs gap-1.5 min-w-[32px]",
       md: "h-10 px-4 text-sm gap-2 min-h-[40px]",
       lg: "h-12 px-6 text-base gap-2.5 min-h-[44px]",
-      icon: "h-10 w-10 p-0 text-sm min-h-[40px] min-w-[40px]",
+      icon: "h-11 w-11 sm:h-10 sm:w-10 p-0 text-sm min-h-[44px] min-w-[44px] sm:min-h-[40px] sm:min-w-[40px]",
     };
 
     return (

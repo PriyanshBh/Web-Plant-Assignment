@@ -19,6 +19,7 @@ export interface IProjectResponse {
     todo: number;
     inProgress: number;
     done: number;
+    overdue?: number;
   };
   createdAt: string;
   updatedAt: string;
