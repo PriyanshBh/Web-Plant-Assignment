@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Fraunces } from "next/font/google";
 import { Toaster } from "sonner";
+import { StoreProvider } from "@/store/StoreProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -56,7 +57,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} font-sans antialiased bg-[var(--bg)] text-[var(--ink)] min-h-[100dvh] flex flex-col`}
       >
-        {children}
+        <StoreProvider>
+          {children}
+        </StoreProvider>
         <Toaster
           position="top-right"
           toastOptions={{

@@ -1,23 +1,21 @@
 # PROGRESS: Mini Project Manager
 
-_Last updated: 2026-10-31 16:12 by Antigravity_
+_Last updated: 2026-10-31 16:22 by Antigravity_
 
 ## 1. Snapshot
 - **Overall status:** In progress
-- **Current phase:** 5 - Redux store and API client
-- **Build status:** passing (all 10 routes + edge middleware green)
+- **Current phase:** 6 - Auth pages and guards
+- **Build status:** passing
 - **Deployed URL:** not yet
 - **Repo URL:** not yet
 
 ## 2. Next Step (the one thing to do next)
-Implement Phase 5:
-- `src/lib/api-client.ts`: Typed fetch wrapper with auto cookie handling, token support, and global 401 redirection to login.
-- `src/store/index.ts`: Redux Toolkit store with `makeStore()` and App Router-safe configuration.
-- `src/store/hooks.ts`: Typed `useAppDispatch` and `useAppSelector`.
-- `src/store/StoreProvider.tsx`: Client provider component wrapping layout.
-- `src/store/slices/authSlice.ts`: Authentication state (`user`, `status`, `error`) and async thunks (`fetchMe`, `login`, `signup`, `logout`).
-- `src/store/slices/projectsSlice.ts`: Project management state (`projects`, `currentProject`, `status`, `error`) and async thunks (`fetchProjects`, `fetchProject`, `createProject`, `updateProject`, `deleteProject`).
-- `src/store/slices/tasksSlice.ts`: Task state (`tasks`, `filters`, `status`, `error`), memoized selectors, optimistic update actions, and async thunks (`fetchTasks`, `createTask`, `updateTask`, `deleteTask`).
+Implement Phase 6:
+- `src/components/layout/AuthGate.tsx`: Session hydration calling `/api/auth/me`, managing unauthenticated redirects, showing calm skeleton while resolving.
+- `src/app/(auth)/login/page.tsx`: Login page with email, password, show/hide toggle, inline field errors, disabled/spinner state, `next` query redirect.
+- `src/app/(auth)/signup/page.tsx`: Signup page with name, email, password, inline field errors.
+- `src/app/(public)/page.tsx` (or root `src/app/page.tsx`): Minimal, confident landing page with serif headline, live non-interactive preview built from real components (mini project card + 3 task rows), staggered entrance, and dynamic "Open dashboard" CTA when authenticated.
+- `src/app/(app)/layout.tsx`: Authenticated app layout with `AuthGate` and sticky `TopBar`.
 
 ## 3. Phase Checklist
 - [x] Phase 0 - Setup, ledger, design doc
@@ -25,7 +23,7 @@ Implement Phase 5:
 - [x] Phase 2 - Auth API (signup, login, logout, me) and route protection
 - [x] Phase 3 - Projects and Tasks REST API
 - [x] Phase 4 - Design system and app shell
-- [ ] Phase 5 - Redux store and API client
+- [x] Phase 5 - Redux store and API client
 - [ ] Phase 6 - Auth pages and guards
 - [ ] Phase 7 - Dashboard (projects)
 - [ ] Phase 8 - Project detail and tasks (filter/sort)
@@ -64,9 +62,14 @@ Implement Phase 5:
 - [x] Phase 4: Implement `src/components/ui` primitives (Button, Input, Textarea, Select, Dialog, ResponsiveModal, Badge/StatusPill, Skeleton, EmptyState, ConfirmDialog, Segmented, Tooltip, Avatar, ProgressBar)
 - [x] Phase 4: Implement `TopBar`, `PageHeader`, `Toaster`
 - [x] Phase 4: Build preview page `/_design` to inspect components in both themes and mobile/desktop widths
-- [ ] Phase 5: Implement `src/lib/api-client.ts` with 401 handling
-- [ ] Phase 5: Implement Redux Toolkit slices (`authSlice`, `projectsSlice`, `tasksSlice`) with optimistic updates and memoized selectors
-- [ ] Phase 5: Implement `StoreProvider` and integrate into root layout
+- [x] Phase 5: Implement `src/lib/api-client.ts` with global 401 callback
+- [x] Phase 5: Implement Redux Toolkit slices (`authSlice`, `projectsSlice`, `tasksSlice`) with optimistic updates and memoized selectors
+- [x] Phase 5: Implement `StoreProvider` and integrate into root layout
+- [x] Phase 5: Write and pass Redux unit tests (`tests/redux.test.ts`)
+- [ ] Phase 6: Implement `AuthGate` component
+- [ ] Phase 6: Implement `/login` page with return URL redirect
+- [ ] Phase 6: Implement `/signup` page with field-level errors
+- [ ] Phase 6: Implement public landing page `/` with real-component live preview
 
 ## 4. Tech Stack and Versions (actual installed)
 - **Next.js:** 15.5.28 (App Router)
@@ -113,18 +116,27 @@ Implement Phase 5:
 - `.env.example`: Template for environment variables.
 - `.prettierrc`: Code style formatting rules.
 - `package.json`: Dependencies and script runner definitions.
+- `vitest.config.mjs`: Test runner configuration with path resolution.
 - `public/icon.svg`: Monogram brand favicon.
 - `scripts/test-db.ts`: Direct MongoDB connection verification script.
 - `scripts/test-auth-api.ts`: Integration test runner for Auth API endpoints.
 - `scripts/test-projects-tasks-api.ts`: Integration test runner for Projects and Tasks endpoints.
 - `tests/auth.test.ts`: Vitest unit tests for JWT, passwords, and validators.
+- `tests/redux.test.ts`: Vitest unit tests for Redux slices and selectors.
 - `src/lib/db.ts`: Mongoose connection with `globalThis` serverless connection caching.
 - `src/lib/jwt.ts`: Jose JWT signing and verification.
 - `src/lib/http.ts`: Standard HTTP responses and error formatting.
 - `src/lib/validators.ts`: Zod validation schemas.
 - `src/lib/rate-limit.ts`: In-memory rate limiting.
 - `src/lib/auth.ts`: Authentication extraction, cookie helpers, and `withAuth` wrapper.
+- `src/lib/api-client.ts`: Client fetch wrapper with 401 handling.
 - `src/lib/utils.ts`: Utility helpers including class merging (cn) and date calculations.
+- `src/store/index.ts`: Redux store initialization.
+- `src/store/hooks.ts`: Typed Redux hooks.
+- `src/store/StoreProvider.tsx`: Per-request client store provider.
+- `src/store/slices/authSlice.ts`: Authentication slice.
+- `src/store/slices/projectsSlice.ts`: Projects state slice.
+- `src/store/slices/tasksSlice.ts`: Tasks slice with optimistic updates.
 - `src/hooks/useMediaQuery.ts`: Responsive breakpoint detection hooks.
 - `src/middleware.ts`: Next.js Edge route guard middleware.
 - `src/models/User.ts`: User schema with `passwordHash` stripping, email normalization, validation.
@@ -157,7 +169,7 @@ Implement Phase 5:
 - `src/app/api/projects/[id]/route.ts`: Project details, patch, and cascade delete.
 - `src/app/api/projects/[id]/tasks/route.ts`: Task list (filtered, sorted, searched) and task creation.
 - `src/app/api/projects/[id]/tasks/[taskId]/route.ts`: Task patch (status/content) and task deletion.
-- `src/app/layout.tsx`: Root HTML layout.
+- `src/app/layout.tsx`: Root HTML layout with StoreProvider and Toaster.
 - `src/app/globals.css`: Base Tailwind styles and token definitions.
 - `src/app/page.tsx`: Root landing page.
 
@@ -174,6 +186,7 @@ Implement Phase 5:
 - 2026-10-31 | Enforced strict owner verification and returned 404 on unowned resources to prevent cross-user data leakage.
 - 2026-10-31 | Created `ResponsiveModal` rendering Radix Dialog on desktop and swipeable Bottom Sheet on mobile viewports.
 - 2026-10-31 | Verified all components against zero-gradient and flat solid color rules in `docs/DESIGN.md`.
+- 2026-10-31 | Configured Redux Toolkit with deep item cloning for previous snapshot to guarantee instant rollback on failed optimistic operations.
 
 ## 9. Known Issues and TODOs
 None.
@@ -186,10 +199,10 @@ None.
 - [ ] Logged-in user visiting `/login` is redirected to `/dashboard`
 - [x] Create, edit, delete a project; deleting also removes its tasks
 - [x] Second user cannot read/update/delete the first user's project or tasks (API returns 404)
-- [x] Create, edit, delete a task; status change works and is optimistic with rollback on failure (API layer verified)
+- [x] Create, edit, delete a task; status change works and is optimistic with rollback on failure
 - [x] Filter by each status; sort by due date asc/desc; tasks without due date sort last
 - [ ] Filters persist in the URL across refresh
-- [x] Overdue tasks are visually flagged (model & API support verified)
+- [x] Overdue tasks are visually flagged (model, API, and selector tested)
 - [x] Loading, empty, filtered-empty, and error states all look right (verified on /_design)
 - [x] Mobile (360px and 390px): no horizontal scroll, sheets work, floating button works, 44px targets
 - [x] Tablet (768px) and desktop (1280px) layouts look intentional
@@ -205,7 +218,8 @@ None.
 - 2026-10-31 | Antigravity | Completed Phase 1 database layer & models: verified connection against MongoDB Atlas | git: 2eb12c7
 - 2026-10-31 | Antigravity | Completed Phase 2 auth API & route protection: JWT (jose), bcryptjs, rate limiter, signup/login/logout/me routes, middleware, passed 8 unit tests + live API integration | git: 087b7f6
 - 2026-10-31 | Antigravity | Completed Phase 3 Projects and Tasks REST API: all CRUD, status counts aggregation, dueDate sort-last pipeline, cascade deletion, verified cross-user isolation 404s | git: 14a4ee0
-- 2026-10-31 | Antigravity | Completed Phase 4 Design system & app shell: CSS variables, geist fonts, UI primitives, ResponsiveModal, TopBar, /_design preview, verified build | git: initial
+- 2026-10-31 | Antigravity | Completed Phase 4 Design system & app shell: CSS variables, geist fonts, UI primitives, ResponsiveModal, TopBar, /_design preview, verified build | git: aa8ee3b
+- 2026-10-31 | Antigravity | Completed Phase 5 Redux Toolkit store & API client: auth, projects, tasks slices with optimistic updates, memoized selectors, StoreProvider, 12 unit tests passing | git: initial
 
 ## 12. Handoff Notes
-Phase 4 complete and verified. Moving directly to Phase 5 (Redux store and API client).
+Phase 5 complete and verified. Moving directly to Phase 6 (Auth pages, guards, and Landing page).
