@@ -105,7 +105,7 @@ async function main() {
   const logoutReq = new NextRequest("http://localhost:3000/api/auth/logout", {
     method: "POST",
   });
-  const logoutRes = await logoutHandler(logoutReq);
+  const logoutRes = await logoutHandler();
   const logoutJson = await logoutRes.json();
   console.log("Logout Status:", logoutRes.status);
   console.log("Logout Response:", logoutJson);

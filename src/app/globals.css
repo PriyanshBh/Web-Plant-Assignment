@@ -1,26 +1,113 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #F7F6F2;
+  --surface: #FFFFFF;
+  --surface-2: #F0EEE8;
+  --border: #E4E1D9;
+  --ink: #151515;
+  --ink-2: #55534E;
+  --ink-3: #8A877F;
+  --accent: #E5502B;
+  --accent-ink: #FFFFFF;
+  --danger: #B42318;
+  --todo-fg: #5F5D57;
+  --todo-bg: #EFEDE6;
+  --prog-fg: #9A5A00;
+  --prog-bg: #FFF1D6;
+  --done-fg: #1B6B45;
+  --done-bg: #DDF2E6;
+
+  --popover-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08);
+}
+
+.dark {
+  --bg: #0F0F0E;
+  --surface: #171716;
+  --surface-2: #1F1F1D;
+  --border: #2C2B28;
+  --ink: #F2F1EC;
+  --ink-2: #A8A59C;
+  --ink-3: #75726B;
+  --accent: #FF6A42;
+  --accent-ink: #151515;
+  --danger: #F97066;
+  --todo-fg: #B5B2A9;
+  --todo-bg: #262522;
+  --prog-fg: #F5B14C;
+  --prog-bg: #33270F;
+  --done-fg: #5FCB92;
+  --done-bg: #12301F;
+
+  --popover-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.4);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-danger: var(--danger);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-todo-fg: var(--todo-fg);
+  --color-todo-bg: var(--todo-bg);
+  --color-prog-fg: var(--prog-fg);
+  --color-prog-bg: var(--prog-bg);
+  --color-done-fg: var(--done-fg);
+  --color-done-bg: var(--done-bg);
+
+  --font-sans: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+  --font-serif: var(--font-fraunces), Georgia, serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  min-height: 100dvh;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Tabular figures for numbers, counts, and dates */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Custom focus ring */
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Soft skeleton pulse without shimmer sweep */
+@keyframes subtle-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+.animate-skeleton {
+  animation: subtle-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Accessibility: Honor prefers-reduced-motion strictly */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -49,10 +49,10 @@ const ProjectSchema = new Schema<IProject>(
   {
     timestamps: true,
     toJSON: {
-      transform(_doc, ret: Record<string, any>) {
-        ret.id = ret._id ? ret._id.toString() : "";
-        if (ret.owner && typeof ret.owner === "object" && ret.owner.toString) {
-          ret.owner = ret.owner.toString();
+      transform(_doc, ret: Record<string, unknown>) {
+        ret.id = ret._id ? (ret._id as { toString(): string }).toString() : "";
+        if (ret.owner && typeof ret.owner === "object" && "toString" in ret.owner) {
+          ret.owner = (ret.owner as { toString(): string }).toString();
         }
         delete ret._id;
         delete ret.__v;
@@ -60,10 +60,10 @@ const ProjectSchema = new Schema<IProject>(
       },
     },
     toObject: {
-      transform(_doc, ret: Record<string, any>) {
-        ret.id = ret._id ? ret._id.toString() : "";
-        if (ret.owner && typeof ret.owner === "object" && ret.owner.toString) {
-          ret.owner = ret.owner.toString();
+      transform(_doc, ret: Record<string, unknown>) {
+        ret.id = ret._id ? (ret._id as { toString(): string }).toString() : "";
+        if (ret.owner && typeof ret.owner === "object" && "toString" in ret.owner) {
+          ret.owner = (ret.owner as { toString(): string }).toString();
         }
         delete ret._id;
         delete ret.__v;

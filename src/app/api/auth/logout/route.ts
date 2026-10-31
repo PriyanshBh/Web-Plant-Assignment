@@ -1,8 +1,8 @@
-import { NextRequest } from "next/server";
+
 import { ok, handleApiError } from "@/lib/http";
 import { clearAuthCookie } from "@/lib/auth";
 
-export async function POST(_req: NextRequest) {
+export async function POST() {
   try {
     const response = ok({ message: "Logged out successfully" }, 200);
     clearAuthCookie(response);

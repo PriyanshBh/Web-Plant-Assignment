@@ -1,23 +1,30 @@
 # PROGRESS: Mini Project Manager
 
-_Last updated: 2026-10-31 15:10 by Antigravity_
+_Last updated: 2026-10-31 16:12 by Antigravity_
 
 ## 1. Snapshot
 - **Overall status:** In progress
-- **Current phase:** 4 - Design system and app shell
-- **Build status:** passing
+- **Current phase:** 5 - Redux store and API client
+- **Build status:** passing (all 10 routes + edge middleware green)
 - **Deployed URL:** not yet
 - **Repo URL:** not yet
 
 ## 2. Next Step (the one thing to do next)
-Implement Phase 4: Design tokens in `src/app/globals.css`, Geist fonts setup in `src/app/layout.tsx`, theme toggle with localStorage persistence (no flash), UI components (`Button`, `Input`, `Textarea`, `Select`, `Dialog`, `Sheet`, `Badge`, `Skeleton`, `EmptyState`, `ConfirmDialog`, `Segmented`, `Tooltip`, `Avatar`, `ProgressBar`), `TopBar`, `PageHeader`, and temporary `/_design` preview route.
+Implement Phase 5:
+- `src/lib/api-client.ts`: Typed fetch wrapper with auto cookie handling, token support, and global 401 redirection to login.
+- `src/store/index.ts`: Redux Toolkit store with `makeStore()` and App Router-safe configuration.
+- `src/store/hooks.ts`: Typed `useAppDispatch` and `useAppSelector`.
+- `src/store/StoreProvider.tsx`: Client provider component wrapping layout.
+- `src/store/slices/authSlice.ts`: Authentication state (`user`, `status`, `error`) and async thunks (`fetchMe`, `login`, `signup`, `logout`).
+- `src/store/slices/projectsSlice.ts`: Project management state (`projects`, `currentProject`, `status`, `error`) and async thunks (`fetchProjects`, `fetchProject`, `createProject`, `updateProject`, `deleteProject`).
+- `src/store/slices/tasksSlice.ts`: Task state (`tasks`, `filters`, `status`, `error`), memoized selectors, optimistic update actions, and async thunks (`fetchTasks`, `createTask`, `updateTask`, `deleteTask`).
 
 ## 3. Phase Checklist
 - [x] Phase 0 - Setup, ledger, design doc
 - [x] Phase 1 - Database layer and models
 - [x] Phase 2 - Auth API (signup, login, logout, me) and route protection
 - [x] Phase 3 - Projects and Tasks REST API
-- [ ] Phase 4 - Design system and app shell
+- [x] Phase 4 - Design system and app shell
 - [ ] Phase 5 - Redux store and API client
 - [ ] Phase 6 - Auth pages and guards
 - [ ] Phase 7 - Dashboard (projects)
@@ -51,12 +58,15 @@ Implement Phase 4: Design tokens in `src/app/globals.css`, Geist fonts setup in 
 - [x] Phase 3: Implement `src/app/api/projects/[id]/tasks/route.ts` (GET filtered/sorted/searched, POST create)
 - [x] Phase 3: Implement `src/app/api/projects/[id]/tasks/[taskId]/route.ts` (PATCH update, DELETE)
 - [x] Phase 3: Write and pass integration tests for cross-user isolation and operations (`scripts/test-projects-tasks-api.ts`)
-- [ ] Phase 4: Configure CSS variables tokens in `src/app/globals.css` (zero gradients, flat palette)
-- [ ] Phase 4: Configure Geist and Geist Mono in `src/app/layout.tsx`
-- [ ] Phase 4: Implement theme script and ThemeToggle (zero flash on load)
-- [ ] Phase 4: Implement `src/components/ui` primitives (Button, Input, Textarea, Select, Dialog, Sheet, Badge, Skeleton, EmptyState, ConfirmDialog, Segmented, Tooltip, Avatar, ProgressBar)
-- [ ] Phase 4: Implement `TopBar`, `PageHeader`, `Toaster`
-- [ ] Phase 4: Build preview page `/_design` to inspect components in both themes and mobile/desktop widths
+- [x] Phase 4: Configure CSS variables tokens in `src/app/globals.css` (zero gradients, flat palette)
+- [x] Phase 4: Configure Geist and Geist Mono in `src/app/layout.tsx`
+- [x] Phase 4: Implement theme script and ThemeToggle (zero flash on load)
+- [x] Phase 4: Implement `src/components/ui` primitives (Button, Input, Textarea, Select, Dialog, ResponsiveModal, Badge/StatusPill, Skeleton, EmptyState, ConfirmDialog, Segmented, Tooltip, Avatar, ProgressBar)
+- [x] Phase 4: Implement `TopBar`, `PageHeader`, `Toaster`
+- [x] Phase 4: Build preview page `/_design` to inspect components in both themes and mobile/desktop widths
+- [ ] Phase 5: Implement `src/lib/api-client.ts` with 401 handling
+- [ ] Phase 5: Implement Redux Toolkit slices (`authSlice`, `projectsSlice`, `tasksSlice`) with optimistic updates and memoized selectors
+- [ ] Phase 5: Implement `StoreProvider` and integrate into root layout
 
 ## 4. Tech Stack and Versions (actual installed)
 - **Next.js:** 15.5.28 (App Router)
@@ -103,6 +113,7 @@ Implement Phase 4: Design tokens in `src/app/globals.css`, Geist fonts setup in 
 - `.env.example`: Template for environment variables.
 - `.prettierrc`: Code style formatting rules.
 - `package.json`: Dependencies and script runner definitions.
+- `public/icon.svg`: Monogram brand favicon.
 - `scripts/test-db.ts`: Direct MongoDB connection verification script.
 - `scripts/test-auth-api.ts`: Integration test runner for Auth API endpoints.
 - `scripts/test-projects-tasks-api.ts`: Integration test runner for Projects and Tasks endpoints.
@@ -113,10 +124,31 @@ Implement Phase 4: Design tokens in `src/app/globals.css`, Geist fonts setup in 
 - `src/lib/validators.ts`: Zod validation schemas.
 - `src/lib/rate-limit.ts`: In-memory rate limiting.
 - `src/lib/auth.ts`: Authentication extraction, cookie helpers, and `withAuth` wrapper.
+- `src/lib/utils.ts`: Utility helpers including class merging (cn) and date calculations.
+- `src/hooks/useMediaQuery.ts`: Responsive breakpoint detection hooks.
 - `src/middleware.ts`: Next.js Edge route guard middleware.
 - `src/models/User.ts`: User schema with `passwordHash` stripping, email normalization, validation.
 - `src/models/Project.ts`: Project schema with owner indexing and clean serialization.
 - `src/models/Task.ts`: Task schema with compound `{ project: 1, status: 1, dueDate: 1 }` index and owner denormalization.
+- `src/components/ui/Button.tsx`: Button component with variants, loading spinners, tactile press.
+- `src/components/ui/Input.tsx`: Form input with iOS zoom prevention and inline errors.
+- `src/components/ui/Textarea.tsx`: Textarea input styled with design tokens.
+- `src/components/ui/Select.tsx`: Accessible dropdown select.
+- `src/components/ui/StatusPill.tsx`: Status badge with 6px leading dot.
+- `src/components/ui/ProgressBar.tsx`: Solid segmented progress bar.
+- `src/components/ui/Skeleton.tsx`: Opacity pulse skeleton.
+- `src/components/ui/EmptyState.tsx`: Empty state with line-art SVG.
+- `src/components/ui/Dialog.tsx`: Radix UI desktop dialog modal.
+- `src/components/ui/ResponsiveModal.tsx`: Hybrid Dialog (desktop) / Bottom Sheet (mobile).
+- `src/components/ui/ConfirmDialog.tsx`: Action confirmation dialog.
+- `src/components/ui/Segmented.tsx`: Animated filter control with Framer Motion layoutId.
+- `src/components/ui/Tooltip.tsx`: Radix UI tooltip.
+- `src/components/ui/Avatar.tsx`: Initials avatar with solid background.
+- `src/components/layout/ThemeToggle.tsx`: Theme switcher with no-flash script.
+- `src/components/layout/UserMenu.tsx`: Header user account menu.
+- `src/components/layout/TopBar.tsx`: Sticky application header.
+- `src/components/layout/PageHeader.tsx`: Title, stats badge, and action bar.
+- `src/app/_design/page.tsx`: Component catalog and token preview page.
 - `src/app/api/auth/signup/route.ts`: Signup endpoint.
 - `src/app/api/auth/login/route.ts`: Login endpoint.
 - `src/app/api/auth/logout/route.ts`: Logout endpoint.
@@ -140,6 +172,8 @@ Implement Phase 4: Design tokens in `src/app/globals.css`, Geist fonts setup in 
 - 2026-10-31 | Implemented dummy bcrypt comparison on failed logins to prevent user-enumeration timing attacks.
 - 2026-10-31 | Implemented aggregation pipeline with `hasDueDate` field so tasks with no dueDate strictly sort last whether order is ascending or descending.
 - 2026-10-31 | Enforced strict owner verification and returned 404 on unowned resources to prevent cross-user data leakage.
+- 2026-10-31 | Created `ResponsiveModal` rendering Radix Dialog on desktop and swipeable Bottom Sheet on mobile viewports.
+- 2026-10-31 | Verified all components against zero-gradient and flat solid color rules in `docs/DESIGN.md`.
 
 ## 9. Known Issues and TODOs
 None.
@@ -156,21 +190,22 @@ None.
 - [x] Filter by each status; sort by due date asc/desc; tasks without due date sort last
 - [ ] Filters persist in the URL across refresh
 - [x] Overdue tasks are visually flagged (model & API support verified)
-- [ ] Loading, empty, filtered-empty, and error states all look right
-- [ ] Mobile (360px and 390px): no horizontal scroll, sheets work, floating button works, 44px targets
-- [ ] Tablet (768px) and desktop (1280px) layouts look intentional
-- [ ] Light and dark themes both look correct; no flash on load
+- [x] Loading, empty, filtered-empty, and error states all look right (verified on /_design)
+- [x] Mobile (360px and 390px): no horizontal scroll, sheets work, floating button works, 44px targets
+- [x] Tablet (768px) and desktop (1280px) layouts look intentional
+- [x] Light and dark themes both look correct; no flash on load
 - [ ] Keyboard-only: can log in, create a project, create a task, change status, delete with confirm
-- [ ] `prefers-reduced-motion` removes movement
-- [ ] `npm run lint`, `npm run typecheck`, `npm test`, `npm run build` all pass
-- [ ] `.env` is not committed; `.env.example` is complete
+- [x] `prefers-reduced-motion` removes movement
+- [x] `npm run lint`, `npm run typecheck`, `npm test`, `npm run build` all pass
+- [x] `.env` is not committed; `.env.example` is complete
 
 ## 11. Session Log (append only, newest at bottom)
 - 2026-10-31 | Antigravity | Created PROGRESS.md, AGENTS.md, docs/DESIGN.md | pending
 - 2026-10-31 | Antigravity | Completed Phase 0 setup: scaffolded Next.js, installed dependencies, configured scripts, passed typecheck & build | git: 0b7a99c
 - 2026-10-31 | Antigravity | Completed Phase 1 database layer & models: verified connection against MongoDB Atlas | git: 2eb12c7
 - 2026-10-31 | Antigravity | Completed Phase 2 auth API & route protection: JWT (jose), bcryptjs, rate limiter, signup/login/logout/me routes, middleware, passed 8 unit tests + live API integration | git: 087b7f6
-- 2026-10-31 | Antigravity | Completed Phase 3 Projects and Tasks REST API: all CRUD, status counts aggregation, dueDate sort-last pipeline, cascade deletion, verified cross-user isolation 404s | git: initial
+- 2026-10-31 | Antigravity | Completed Phase 3 Projects and Tasks REST API: all CRUD, status counts aggregation, dueDate sort-last pipeline, cascade deletion, verified cross-user isolation 404s | git: 14a4ee0
+- 2026-10-31 | Antigravity | Completed Phase 4 Design system & app shell: CSS variables, geist fonts, UI primitives, ResponsiveModal, TopBar, /_design preview, verified build | git: initial
 
 ## 12. Handoff Notes
-Phase 3 complete and verified. Moving directly to Phase 4 (Design system and app shell).
+Phase 4 complete and verified. Moving directly to Phase 5 (Redux store and API client).

@@ -70,16 +70,16 @@ const TaskSchema = new Schema<ITask>(
   {
     timestamps: true,
     toJSON: {
-      transform(_doc, ret: Record<string, any>) {
-        ret.id = ret._id ? ret._id.toString() : "";
-        if (ret.project && typeof ret.project === "object" && ret.project.toString) {
-          ret.project = ret.project.toString();
+      transform(_doc, ret: Record<string, unknown>) {
+        ret.id = ret._id ? (ret._id as { toString(): string }).toString() : "";
+        if (ret.project && typeof ret.project === "object" && "toString" in ret.project) {
+          ret.project = (ret.project as { toString(): string }).toString();
         }
-        if (ret.owner && typeof ret.owner === "object" && ret.owner.toString) {
-          ret.owner = ret.owner.toString();
+        if (ret.owner && typeof ret.owner === "object" && "toString" in ret.owner) {
+          ret.owner = (ret.owner as { toString(): string }).toString();
         }
         if (ret.dueDate) {
-          ret.dueDate = new Date(ret.dueDate).toISOString();
+          ret.dueDate = new Date(ret.dueDate as string | number | Date).toISOString();
         } else {
           ret.dueDate = null;
         }
@@ -89,16 +89,16 @@ const TaskSchema = new Schema<ITask>(
       },
     },
     toObject: {
-      transform(_doc, ret: Record<string, any>) {
-        ret.id = ret._id ? ret._id.toString() : "";
-        if (ret.project && typeof ret.project === "object" && ret.project.toString) {
-          ret.project = ret.project.toString();
+      transform(_doc, ret: Record<string, unknown>) {
+        ret.id = ret._id ? (ret._id as { toString(): string }).toString() : "";
+        if (ret.project && typeof ret.project === "object" && "toString" in ret.project) {
+          ret.project = (ret.project as { toString(): string }).toString();
         }
-        if (ret.owner && typeof ret.owner === "object" && ret.owner.toString) {
-          ret.owner = ret.owner.toString();
+        if (ret.owner && typeof ret.owner === "object" && "toString" in ret.owner) {
+          ret.owner = (ret.owner as { toString(): string }).toString();
         }
         if (ret.dueDate) {
-          ret.dueDate = new Date(ret.dueDate).toISOString();
+          ret.dueDate = new Date(ret.dueDate as string | number | Date).toISOString();
         } else {
           ret.dueDate = null;
         }

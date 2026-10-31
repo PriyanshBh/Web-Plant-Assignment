@@ -74,7 +74,7 @@ export function clearAuthCookie(res: NextResponse): void {
   });
 }
 
-export type AuthenticatedRouteHandler<P = any> = (
+export type AuthenticatedRouteHandler<P = unknown> = (
   req: NextRequest,
   context: { userId: string; params: Promise<P> }
 ) => Promise<NextResponse | Response>;
@@ -82,7 +82,7 @@ export type AuthenticatedRouteHandler<P = any> = (
 /**
  * Route protection wrapper for Next.js App Router API endpoints
  */
-export function withAuth<P = any>(handler: AuthenticatedRouteHandler<P>) {
+export function withAuth<P = unknown>(handler: AuthenticatedRouteHandler<P>) {
   return async (
     req: NextRequest,
     routeContext: { params: Promise<P> }

@@ -50,7 +50,7 @@ export const GET = withAuth<RouteParams>(
     const validatedQuery = taskQuerySchema.parse(queryInput);
 
     // Build match conditions
-    const matchCondition: Record<string, any> = {
+    const matchCondition: Record<string, unknown> = {
       project: projectObjectId,
       owner: userObjectId,
     };
@@ -67,7 +67,7 @@ export const GET = withAuth<RouteParams>(
     }
 
     // Build pipeline: tasks with no dueDate sort last when sorting by dueDate
-    const pipeline: any[] = [{ $match: matchCondition }];
+    const pipeline: mongoose.PipelineStage[] = [{ $match: matchCondition }];
 
     if (validatedQuery.sort === "dueDate") {
       const sortDirection = validatedQuery.order === "asc" ? 1 : -1;
