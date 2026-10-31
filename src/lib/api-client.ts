@@ -41,7 +41,7 @@ export async function apiClient<T>(
 
   const response = await fetch(endpoint, config);
 
-  let data: any = null;
+  let data: unknown = null;
   try {
     data = await response.json();
   } catch {
@@ -55,7 +55,18 @@ export async function apiClient<T>(
       }
     }
 
-    const errorPayload = data?.error;
+    const errorPayload = (
+      data as
+        | {
+            error?: {
+              message?: string;
+              code?: string;
+              fields?: Record<string, string>;
+            };
+          }
+        | undefined
+    )?.error;
+
     throw new ApiError(
       errorPayload?.message || `Request failed with status ${response.status}`,
       response.status,
@@ -64,7 +75,12 @@ export async function apiClient<T>(
     );
   }
 
-  return (data?.data ?? data) as T;
+  const result = data as { data?: T } | T;
+  return (
+    result && typeof result === "object" && "data" in result
+      ? (result as { data: T }).data
+      : result
+  ) as T;
 }
 
 export default apiClient;

@@ -6,7 +6,7 @@ import {
 } from "@reduxjs/toolkit";
 import { apiClient, ApiError } from "@/lib/api-client";
 import { ITaskResponse, TaskStatus } from "@/models/Task";
-import { TaskCreateInput, TaskUpdateInput, TaskQueryInput } from "@/lib/validators";
+import { TaskCreateInput, TaskUpdateInput } from "@/lib/validators";
 import { isOverdue } from "@/lib/utils";
 
 export interface TaskFilters {
