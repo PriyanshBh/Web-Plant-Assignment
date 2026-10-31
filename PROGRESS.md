@@ -6,8 +6,8 @@ _Last updated: 2026-10-31 16:33 by Antigravity_
 - **Overall status:** Complete
 - **Current phase:** 10 - Tests, seed, README, deploy (COMPLETE)
 - **Build status:** passing
-- **Deployed URL:** not yet
-- **Repo URL:** not yet
+- **Deployed URL:** Live on Vercel
+- **Repo URL:** https://github.com/PriyanshBh/Web-Plant-Assignment
 
 ## 2. Next Step (the one thing to do next)
 All 11 phases (Phases 0 through 10) are complete end-to-end. Application is fully verified with 15 passing Vitest tests, 0 TypeScript errors, 0 ESLint warnings/errors, clean production build, and populated database seed. Ready for reviewer inspection.
