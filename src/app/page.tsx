@@ -43,7 +43,7 @@ export default function LandingPage() {
 
             <p className="text-base sm:text-lg text-[var(--ink-2)] leading-relaxed max-w-lg">
               A calm, focused project manager that treats your attention as a finite
-              resource. No gradients, no clutter—just pure execution.
+              resource. Designed for clarity, speed, and effortless execution.
             </p>
 
             <div className="flex flex-wrap items-center gap-3 pt-2">
@@ -154,7 +154,7 @@ export default function LandingPage() {
       </main>
 
       <footer className="border-t border-[var(--border)] py-6 text-center text-xs text-[var(--ink-3)]">
-        Mini Project Manager — Built with Next.js, Redux Toolkit, and MongoDB.
+        Mini Project Manager — Designed for modern workflows and structured execution.
       </footer>
     </div>
   );
