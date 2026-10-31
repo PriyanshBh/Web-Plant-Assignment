@@ -104,6 +104,13 @@ export const taskCreateSchema = z.object({
 
 export type TaskCreateInput = z.infer<typeof taskCreateSchema>;
 
+export interface TaskCreatePayload {
+  title: string;
+  description?: string;
+  status?: "todo" | "in-progress" | "done";
+  dueDate?: string | null;
+}
+
 // Task Update Schema
 export const taskUpdateSchema = z.object({
   title: z
@@ -130,6 +137,13 @@ export const taskUpdateSchema = z.object({
 });
 
 export type TaskUpdateInput = z.infer<typeof taskUpdateSchema>;
+
+export interface TaskUpdatePayload {
+  title?: string;
+  description?: string;
+  status?: "todo" | "in-progress" | "done";
+  dueDate?: string | null;
+}
 
 // Task Query Filters Schema
 export const taskQuerySchema = z.object({

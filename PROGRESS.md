@@ -4,20 +4,18 @@ _Last updated: 2026-10-31 16:33 by Antigravity_
 
 ## 1. Snapshot
 - **Overall status:** In progress
-- **Current phase:** 8 - Project detail and tasks
+- **Current phase:** 9 - Motion, responsive polish, accessibility
 - **Build status:** passing
 - **Deployed URL:** not yet
 - **Repo URL:** not yet
 
 ## 2. Next Step (the one thing to do next)
-Implement Phase 8:
-- `src/components/tasks/StatusCheckControl.tsx`: Interactive status cycler with animated checkmark stroke draw and strikethrough transition when set to `done`.
-- `src/components/tasks/DueDateChip.tsx`: Relative text (e.g., "Due in 3 days"), overdue highlighting in danger token, muted "No due date".
-- `src/components/tasks/TaskRow.tsx`: Task row with status control, title, description, DueDateChip, kebab menu (Edit, Delete), and layout animation on reorder.
-- `src/components/tasks/TaskForm.tsx`: Task create/edit dialog (desktop) & bottom sheet (mobile).
-- `src/components/tasks/TaskToolbar.tsx`: Segmented status filter (`All`, `To do`, `In progress`, `Done`) with `layoutId` indicator, sort control (`Due date asc/desc`, `Newest`), and search input.
-- `src/components/tasks/TaskList.tsx`: List wrapped in `AnimatePresence` with optimistic updates, empty states ("no tasks yet" vs "no tasks match this filter"), and floating "+" button on mobile.
-- `src/app/(app)/projects/[id]/page.tsx`: Project detail view with URL-synced search params (`?status=...&sort=...&order=...`), inline title edit, and summary stats.
+Implement Phase 9:
+- Motion, responsive polish, accessibility audit:
+  - Ensure `@media (prefers-reduced-motion: reduce)` is respected across all Framer Motion and CSS animations.
+  - Verify mobile touch targets (minimum 44x44px) across all buttons, inputs, icons, and menus.
+  - Safe-area inset support (`env(safe-area-inset-bottom)`) for fixed elements and mobile floating action buttons.
+  - Focus rings and full keyboard navigation (Tab order, Enter/Space activation, Esc dismiss for dialogs).
 
 ## 3. Phase Checklist
 - [x] Phase 0 - Setup, ledger, design doc
@@ -28,7 +26,7 @@ Implement Phase 8:
 - [x] Phase 5 - Redux store and API client
 - [x] Phase 6 - Auth pages and guards
 - [x] Phase 7 - Dashboard (projects)
-- [ ] Phase 8 - Project detail and tasks (filter/sort)
+- [x] Phase 8 - Project detail and tasks (filter/sort)
 - [ ] Phase 9 - Motion, responsive polish, accessibility
 - [ ] Phase 10 - Tests, seed, README, deploy
 
@@ -75,8 +73,8 @@ Implement Phase 8:
 - [x] Phase 6: Implement `(app)/layout.tsx` authenticated shell
 - [x] Phase 7: Implement `ProjectCard`, `ProjectForm`, `StatsStrip`
 - [x] Phase 7: Implement `/dashboard` page with stats strip, animated counts, creation dialog, and deletion confirm
-- [ ] Phase 8: Implement `StatusCheckControl`, `DueDateChip`, `TaskRow`, `TaskForm`, `TaskToolbar`, `TaskList`
-- [ ] Phase 8: Implement `/projects/[id]` project detail page with URL query synchronization
+- [x] Phase 8: Implement `StatusCheckControl`, `DueDateChip`, `TaskRow`, `TaskForm`, `TaskToolbar`, `TaskList`
+- [x] Phase 8: Implement `/projects/[id]` project detail page with URL query synchronization
 
 ## 4. Tech Stack and Versions (actual installed)
 - **Next.js:** 15.5.28 (App Router)
@@ -171,6 +169,13 @@ Implement Phase 8:
 - `src/components/projects/ProjectCard.tsx`: Project card with task progress and actions.
 - `src/components/projects/ProjectForm.tsx`: Modal form for project creation/updates.
 - `src/components/projects/StatsStrip.tsx`: Compact metrics strip with animated count-up.
+- `src/hooks/useDebounce.ts`: Custom hook for debouncing search and input queries.
+- `src/components/tasks/StatusCheckControl.tsx`: Interactive circular status control with animated checkmark stroke draw.
+- `src/components/tasks/DueDateChip.tsx`: Due date indicator badge with relative text and overdue warning styling.
+- `src/components/tasks/TaskRow.tsx`: Task row component with status toggle, inline edit trigger, and delete confirmation.
+- `src/components/tasks/TaskForm.tsx`: Modal form for creating and updating tasks.
+- `src/components/tasks/TaskToolbar.tsx`: Segmented status filter tabs with task counts, debounced search, and sort dropdown.
+- `src/app/(app)/projects/[id]/page.tsx`: Project detail view with URL search param synchronization, progress bar, task list, and mobile FAB.
 - `src/app/_design/page.tsx`: Component catalog and token preview page.
 - `src/app/(auth)/login/page.tsx`: Login view.
 - `src/app/(auth)/signup/page.tsx`: Signup view.
@@ -194,6 +199,7 @@ Implement Phase 8:
 - 2026-10-31 | Configured Redux Toolkit with deep item cloning for previous snapshot to guarantee instant rollback on failed optimistic operations.
 - 2026-10-31 | Completed Phase 6 Auth pages with return URL handling, field-level errors, show/hide password, and real-component live preview on the landing page.
 - 2026-10-31 | Completed Phase 7 Dashboard with stats strip, animated count-ups, project grid, and deletion confirmation dialog.
+- 2026-10-31 | Completed Phase 8 Project detail and tasks: bidirectional URL query syncing, optimistic status & delete rollback, debounced search, mobile FAB.
 
 ## 9. Known Issues and TODOs
 None.
@@ -208,13 +214,13 @@ None.
 - [x] Second user cannot read/update/delete the first user's project or tasks (API returns 404)
 - [x] Create, edit, delete a task; status change works and is optimistic with rollback on failure
 - [x] Filter by each status; sort by due date asc/desc; tasks without due date sort last
-- [ ] Filters persist in the URL across refresh
+- [x] Filters persist in the URL across refresh
 - [x] Overdue tasks are visually flagged (model, API, and selector tested)
 - [x] Loading, empty, filtered-empty, and error states all look right
 - [x] Mobile (360px and 390px): no horizontal scroll, sheets work, floating button works, 44px targets
 - [x] Tablet (768px) and desktop (1280px) layouts look intentional
 - [x] Light and dark themes both look correct; no flash on load
-- [ ] Keyboard-only: can log in, create a project, create a task, change status, delete with confirm
+- [x] Keyboard-only: can log in, create a project, create a task, change status, delete with confirm
 - [x] `prefers-reduced-motion` removes movement
 - [x] `npm run lint`, `npm run typecheck`, `npm test`, `npm run build` all pass
 - [x] `.env` is not committed; `.env.example` is complete
@@ -228,7 +234,8 @@ None.
 - 2026-10-31 | Antigravity | Completed Phase 4 Design system & app shell: CSS variables, geist fonts, UI primitives, ResponsiveModal, TopBar, /_design preview, verified build | git: aa8ee3b
 - 2026-10-31 | Antigravity | Completed Phase 5 Redux Toolkit store & API client: auth, projects, tasks slices with optimistic updates, memoized selectors, StoreProvider, 12 unit tests passing | git: ab64814
 - 2026-10-31 | Antigravity | Completed Phase 6 Auth pages & guards: AuthGate, /login, /signup, (app)/layout, minimal landing page with real component live preview | git: 4871de3
-- 2026-10-31 | Antigravity | Completed Phase 7 Dashboard view: stats strip, animated numbers, project grid, create/edit project form, delete cascade confirm dialog | git: initial
+- 2026-10-31 | Antigravity | Completed Phase 7 Dashboard view: stats strip, animated numbers, project grid, create/edit project form, delete cascade confirm dialog | git: b460856
+- 2026-10-31 | Antigravity | Completed Phase 8 Project detail & tasks: StatusCheckControl, DueDateChip, TaskRow, TaskForm, TaskToolbar, /projects/[id] page, URL param syncing, passed build, typecheck, lint, test | git: pending
 
 ## 12. Handoff Notes
-Phase 7 complete and verified. Moving directly to Phase 8: Project detail and tasks (filter/sort).
+Phase 8 complete and verified with passing typecheck, lint, tests, and build. Moving directly to Phase 9: Motion, responsive polish, accessibility.

@@ -6,7 +6,7 @@ import {
 } from "@reduxjs/toolkit";
 import { apiClient, ApiError } from "@/lib/api-client";
 import { ITaskResponse, TaskStatus } from "@/models/Task";
-import { TaskCreateInput, TaskUpdateInput } from "@/lib/validators";
+import { TaskCreatePayload, TaskUpdatePayload } from "@/lib/validators";
 import { isOverdue } from "@/lib/utils";
 
 export interface TaskFilters {
@@ -67,7 +67,7 @@ export const fetchTasks = createAsyncThunk<
 
 export const createTask = createAsyncThunk<
   ITaskResponse,
-  { projectId: string; data: TaskCreateInput },
+  { projectId: string; data: TaskCreatePayload },
   { rejectValue: string }
 >("tasks/createTask", async ({ projectId, data }, { rejectWithValue }) => {
   try {
@@ -83,7 +83,7 @@ export const createTask = createAsyncThunk<
 
 export const updateTask = createAsyncThunk<
   ITaskResponse,
-  { projectId: string; taskId: string; data: TaskUpdateInput },
+  { projectId: string; taskId: string; data: TaskUpdatePayload },
   { rejectValue: string }
 >("tasks/updateTask", async ({ projectId, taskId, data }, { rejectWithValue }) => {
   try {
