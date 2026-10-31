@@ -1,24 +1,23 @@
 # PROGRESS: Mini Project Manager
 
-_Last updated: 2026-10-31 16:27 by Antigravity_
+_Last updated: 2026-10-31 16:33 by Antigravity_
 
 ## 1. Snapshot
 - **Overall status:** In progress
-- **Current phase:** 7 - Dashboard (projects)
+- **Current phase:** 8 - Project detail and tasks
 - **Build status:** passing
 - **Deployed URL:** not yet
 - **Repo URL:** not yet
 
 ## 2. Next Step (the one thing to do next)
-Implement Phase 7:
-- `src/components/projects/ProjectCard.tsx`: Title, 2-line clamped description, solid segmented progress bar (todo/in-progress/done), "X of Y done", relative time, 1px hover lift, border darken, kebab actions menu (Edit, Delete).
-- `src/components/projects/ProjectForm.tsx`: Create / Edit project form inside `ResponsiveModal` (Dialog on desktop, Bottom Sheet on mobile).
-- `src/components/projects/ProjectGrid.tsx`: Responsive grid (1 col mobile, 2 tablet, 3 desktop) with staggered entrance animation.
-- `src/app/(app)/dashboard/page.tsx`:
-  - Page header ("Projects" + count + primary "New project" button).
-  - Stats strip: total projects, open tasks, overdue tasks, done tasks (with Geist Mono numbers and initial count-up animation).
-  - Project grid, skeleton loading cards, EmptyState with create CTA, error handling with inline retry.
-  - Delete `ConfirmDialog` stating how many tasks will also be deleted.
+Implement Phase 8:
+- `src/components/tasks/StatusCheckControl.tsx`: Interactive status cycler with animated checkmark stroke draw and strikethrough transition when set to `done`.
+- `src/components/tasks/DueDateChip.tsx`: Relative text (e.g., "Due in 3 days"), overdue highlighting in danger token, muted "No due date".
+- `src/components/tasks/TaskRow.tsx`: Task row with status control, title, description, DueDateChip, kebab menu (Edit, Delete), and layout animation on reorder.
+- `src/components/tasks/TaskForm.tsx`: Task create/edit dialog (desktop) & bottom sheet (mobile).
+- `src/components/tasks/TaskToolbar.tsx`: Segmented status filter (`All`, `To do`, `In progress`, `Done`) with `layoutId` indicator, sort control (`Due date asc/desc`, `Newest`), and search input.
+- `src/components/tasks/TaskList.tsx`: List wrapped in `AnimatePresence` with optimistic updates, empty states ("no tasks yet" vs "no tasks match this filter"), and floating "+" button on mobile.
+- `src/app/(app)/projects/[id]/page.tsx`: Project detail view with URL-synced search params (`?status=...&sort=...&order=...`), inline title edit, and summary stats.
 
 ## 3. Phase Checklist
 - [x] Phase 0 - Setup, ledger, design doc
@@ -28,7 +27,7 @@ Implement Phase 7:
 - [x] Phase 4 - Design system and app shell
 - [x] Phase 5 - Redux store and API client
 - [x] Phase 6 - Auth pages and guards
-- [ ] Phase 7 - Dashboard (projects)
+- [x] Phase 7 - Dashboard (projects)
 - [ ] Phase 8 - Project detail and tasks (filter/sort)
 - [ ] Phase 9 - Motion, responsive polish, accessibility
 - [ ] Phase 10 - Tests, seed, README, deploy
@@ -74,8 +73,10 @@ Implement Phase 7:
 - [x] Phase 6: Implement `/signup` page with field-level errors
 - [x] Phase 6: Implement public landing page `/` with real-component live preview
 - [x] Phase 6: Implement `(app)/layout.tsx` authenticated shell
-- [ ] Phase 7: Implement `ProjectCard`, `ProjectForm`, `ProjectGrid`
-- [ ] Phase 7: Implement `/dashboard` page with stats strip, animated counts, creation dialog, and deletion confirm
+- [x] Phase 7: Implement `ProjectCard`, `ProjectForm`, `StatsStrip`
+- [x] Phase 7: Implement `/dashboard` page with stats strip, animated counts, creation dialog, and deletion confirm
+- [ ] Phase 8: Implement `StatusCheckControl`, `DueDateChip`, `TaskRow`, `TaskForm`, `TaskToolbar`, `TaskList`
+- [ ] Phase 8: Implement `/projects/[id]` project detail page with URL query synchronization
 
 ## 4. Tech Stack and Versions (actual installed)
 - **Next.js:** 15.5.28 (App Router)
@@ -167,10 +168,14 @@ Implement Phase 7:
 - `src/components/layout/TopBar.tsx`: Sticky application header.
 - `src/components/layout/PageHeader.tsx`: Title, stats badge, and action bar.
 - `src/components/layout/AuthGate.tsx`: Session gatekeeper and skeleton loader.
+- `src/components/projects/ProjectCard.tsx`: Project card with task progress and actions.
+- `src/components/projects/ProjectForm.tsx`: Modal form for project creation/updates.
+- `src/components/projects/StatsStrip.tsx`: Compact metrics strip with animated count-up.
 - `src/app/_design/page.tsx`: Component catalog and token preview page.
 - `src/app/(auth)/login/page.tsx`: Login view.
 - `src/app/(auth)/signup/page.tsx`: Signup view.
 - `src/app/(app)/layout.tsx`: Authenticated app layout shell.
+- `src/app/(app)/dashboard/page.tsx`: Projects dashboard with stats and project grid.
 - `src/app/page.tsx`: Minimal confident landing page with real component live preview.
 
 ## 8. Decisions Log
@@ -188,6 +193,7 @@ Implement Phase 7:
 - 2026-10-31 | Verified all components against zero-gradient and flat solid color rules in `docs/DESIGN.md`.
 - 2026-10-31 | Configured Redux Toolkit with deep item cloning for previous snapshot to guarantee instant rollback on failed optimistic operations.
 - 2026-10-31 | Completed Phase 6 Auth pages with return URL handling, field-level errors, show/hide password, and real-component live preview on the landing page.
+- 2026-10-31 | Completed Phase 7 Dashboard with stats strip, animated count-ups, project grid, and deletion confirmation dialog.
 
 ## 9. Known Issues and TODOs
 None.
@@ -221,7 +227,8 @@ None.
 - 2026-10-31 | Antigravity | Completed Phase 3 Projects and Tasks REST API: all CRUD, status counts aggregation, dueDate sort-last pipeline, cascade deletion, verified cross-user isolation 404s | git: 14a4ee0
 - 2026-10-31 | Antigravity | Completed Phase 4 Design system & app shell: CSS variables, geist fonts, UI primitives, ResponsiveModal, TopBar, /_design preview, verified build | git: aa8ee3b
 - 2026-10-31 | Antigravity | Completed Phase 5 Redux Toolkit store & API client: auth, projects, tasks slices with optimistic updates, memoized selectors, StoreProvider, 12 unit tests passing | git: ab64814
-- 2026-10-31 | Antigravity | Completed Phase 6 Auth pages & guards: AuthGate, /login, /signup, (app)/layout, minimal landing page with real component live preview | git: initial
+- 2026-10-31 | Antigravity | Completed Phase 6 Auth pages & guards: AuthGate, /login, /signup, (app)/layout, minimal landing page with real component live preview | git: 4871de3
+- 2026-10-31 | Antigravity | Completed Phase 7 Dashboard view: stats strip, animated numbers, project grid, create/edit project form, delete cascade confirm dialog | git: initial
 
 ## 12. Handoff Notes
-Phase 6 complete and verified. Moving directly to Phase 7: Dashboard (projects).
+Phase 7 complete and verified. Moving directly to Phase 8: Project detail and tasks (filter/sort).
