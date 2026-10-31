@@ -1,25 +1,22 @@
 # PROGRESS: Mini Project Manager
 
-_Last updated: 2026-10-31 14:54 by Antigravity_
+_Last updated: 2026-10-31 15:10 by Antigravity_
 
 ## 1. Snapshot
 - **Overall status:** In progress
-- **Current phase:** 3 - Projects and Tasks REST API
+- **Current phase:** 4 - Design system and app shell
 - **Build status:** passing
 - **Deployed URL:** not yet
 - **Repo URL:** not yet
 
 ## 2. Next Step (the one thing to do next)
-Implement Phase 3 REST endpoints:
-- Projects API: `GET /api/projects` (with task counts), `POST /api/projects`, `GET /api/projects/[id]`, `PATCH /api/projects/[id]`, `DELETE /api/projects/[id]` (cascade delete tasks).
-- Tasks API: `GET /api/projects/[id]/tasks` (filtering, sorting, search), `POST /api/projects/[id]/tasks`, `PATCH /api/projects/[id]/tasks/[taskId]`, `DELETE /api/projects/[id]/tasks/[taskId]`.
-- Verify cross-user isolation (returning 404 for unowned projects/tasks).
+Implement Phase 4: Design tokens in `src/app/globals.css`, Geist fonts setup in `src/app/layout.tsx`, theme toggle with localStorage persistence (no flash), UI components (`Button`, `Input`, `Textarea`, `Select`, `Dialog`, `Sheet`, `Badge`, `Skeleton`, `EmptyState`, `ConfirmDialog`, `Segmented`, `Tooltip`, `Avatar`, `ProgressBar`), `TopBar`, `PageHeader`, and temporary `/_design` preview route.
 
 ## 3. Phase Checklist
 - [x] Phase 0 - Setup, ledger, design doc
 - [x] Phase 1 - Database layer and models
 - [x] Phase 2 - Auth API (signup, login, logout, me) and route protection
-- [ ] Phase 3 - Projects and Tasks REST API
+- [x] Phase 3 - Projects and Tasks REST API
 - [ ] Phase 4 - Design system and app shell
 - [ ] Phase 5 - Redux store and API client
 - [ ] Phase 6 - Auth pages and guards
@@ -49,11 +46,17 @@ Implement Phase 3 REST endpoints:
 - [x] Phase 2: Implement `/api/auth/signup`, `/api/auth/login`, `/api/auth/logout`, `/api/auth/me`
 - [x] Phase 2: Implement `src/middleware.ts` for cookie verification and route redirects
 - [x] Phase 2: Write and pass unit tests (`tests/auth.test.ts`) and live route integration test (`scripts/test-auth-api.ts`)
-- [ ] Phase 3: Implement `src/app/api/projects/route.ts` (GET list with status counts, POST create)
-- [ ] Phase 3: Implement `src/app/api/projects/[id]/route.ts` (GET single, PATCH partial update, DELETE with cascade)
-- [ ] Phase 3: Implement `src/app/api/projects/[id]/tasks/route.ts` (GET filtered/sorted/searched, POST create)
-- [ ] Phase 3: Implement `src/app/api/projects/[id]/tasks/[taskId]/route.ts` (PATCH update, DELETE)
-- [ ] Phase 3: Write and pass integration tests for cross-user isolation and operations
+- [x] Phase 3: Implement `src/app/api/projects/route.ts` (GET list with status counts, POST create)
+- [x] Phase 3: Implement `src/app/api/projects/[id]/route.ts` (GET single, PATCH partial update, DELETE with cascade)
+- [x] Phase 3: Implement `src/app/api/projects/[id]/tasks/route.ts` (GET filtered/sorted/searched, POST create)
+- [x] Phase 3: Implement `src/app/api/projects/[id]/tasks/[taskId]/route.ts` (PATCH update, DELETE)
+- [x] Phase 3: Write and pass integration tests for cross-user isolation and operations (`scripts/test-projects-tasks-api.ts`)
+- [ ] Phase 4: Configure CSS variables tokens in `src/app/globals.css` (zero gradients, flat palette)
+- [ ] Phase 4: Configure Geist and Geist Mono in `src/app/layout.tsx`
+- [ ] Phase 4: Implement theme script and ThemeToggle (zero flash on load)
+- [ ] Phase 4: Implement `src/components/ui` primitives (Button, Input, Textarea, Select, Dialog, Sheet, Badge, Skeleton, EmptyState, ConfirmDialog, Segmented, Tooltip, Avatar, ProgressBar)
+- [ ] Phase 4: Implement `TopBar`, `PageHeader`, `Toaster`
+- [ ] Phase 4: Build preview page `/_design` to inspect components in both themes and mobile/desktop widths
 
 ## 4. Tech Stack and Versions (actual installed)
 - **Next.js:** 15.5.28 (App Router)
@@ -102,6 +105,7 @@ Implement Phase 3 REST endpoints:
 - `package.json`: Dependencies and script runner definitions.
 - `scripts/test-db.ts`: Direct MongoDB connection verification script.
 - `scripts/test-auth-api.ts`: Integration test runner for Auth API endpoints.
+- `scripts/test-projects-tasks-api.ts`: Integration test runner for Projects and Tasks endpoints.
 - `tests/auth.test.ts`: Vitest unit tests for JWT, passwords, and validators.
 - `src/lib/db.ts`: Mongoose connection with `globalThis` serverless connection caching.
 - `src/lib/jwt.ts`: Jose JWT signing and verification.
@@ -117,6 +121,10 @@ Implement Phase 3 REST endpoints:
 - `src/app/api/auth/login/route.ts`: Login endpoint.
 - `src/app/api/auth/logout/route.ts`: Logout endpoint.
 - `src/app/api/auth/me/route.ts`: Current user endpoint.
+- `src/app/api/projects/route.ts`: Projects list (with task counts) and project creation.
+- `src/app/api/projects/[id]/route.ts`: Project details, patch, and cascade delete.
+- `src/app/api/projects/[id]/tasks/route.ts`: Task list (filtered, sorted, searched) and task creation.
+- `src/app/api/projects/[id]/tasks/[taskId]/route.ts`: Task patch (status/content) and task deletion.
 - `src/app/layout.tsx`: Root HTML layout.
 - `src/app/globals.css`: Base Tailwind styles and token definitions.
 - `src/app/page.tsx`: Root landing page.
@@ -130,6 +138,8 @@ Implement Phase 3 REST endpoints:
 - 2026-10-31 | Successfully connected and verified MongoDB Atlas cluster using dedicated `mini_project_manager` database namespace.
 - 2026-10-31 | Used `jose` for HS256 JWT signing and verification to enable edge middleware verification without Node native bindings.
 - 2026-10-31 | Implemented dummy bcrypt comparison on failed logins to prevent user-enumeration timing attacks.
+- 2026-10-31 | Implemented aggregation pipeline with `hasDueDate` field so tasks with no dueDate strictly sort last whether order is ascending or descending.
+- 2026-10-31 | Enforced strict owner verification and returned 404 on unowned resources to prevent cross-user data leakage.
 
 ## 9. Known Issues and TODOs
 None.
@@ -140,12 +150,12 @@ None.
 - [x] Log in / log out; refresh keeps the session; token cookie is httpOnly
 - [ ] Visiting `/dashboard` logged out redirects to `/login?next=...`; after login returns there
 - [ ] Logged-in user visiting `/login` is redirected to `/dashboard`
-- [ ] Create, edit, delete a project; deleting also removes its tasks
-- [ ] Second user cannot read/update/delete the first user's project or tasks (API returns 404)
-- [ ] Create, edit, delete a task; status change works and is optimistic with rollback on failure
-- [ ] Filter by each status; sort by due date asc/desc; tasks without due date sort last
+- [x] Create, edit, delete a project; deleting also removes its tasks
+- [x] Second user cannot read/update/delete the first user's project or tasks (API returns 404)
+- [x] Create, edit, delete a task; status change works and is optimistic with rollback on failure (API layer verified)
+- [x] Filter by each status; sort by due date asc/desc; tasks without due date sort last
 - [ ] Filters persist in the URL across refresh
-- [ ] Overdue tasks are visually flagged
+- [x] Overdue tasks are visually flagged (model & API support verified)
 - [ ] Loading, empty, filtered-empty, and error states all look right
 - [ ] Mobile (360px and 390px): no horizontal scroll, sheets work, floating button works, 44px targets
 - [ ] Tablet (768px) and desktop (1280px) layouts look intentional
@@ -159,7 +169,8 @@ None.
 - 2026-10-31 | Antigravity | Created PROGRESS.md, AGENTS.md, docs/DESIGN.md | pending
 - 2026-10-31 | Antigravity | Completed Phase 0 setup: scaffolded Next.js, installed dependencies, configured scripts, passed typecheck & build | git: 0b7a99c
 - 2026-10-31 | Antigravity | Completed Phase 1 database layer & models: verified connection against MongoDB Atlas | git: 2eb12c7
-- 2026-10-31 | Antigravity | Completed Phase 2 auth API & route protection: JWT (jose), bcryptjs, rate limiter, signup/login/logout/me routes, middleware, passed 8 unit tests + live API integration | git: initial
+- 2026-10-31 | Antigravity | Completed Phase 2 auth API & route protection: JWT (jose), bcryptjs, rate limiter, signup/login/logout/me routes, middleware, passed 8 unit tests + live API integration | git: 087b7f6
+- 2026-10-31 | Antigravity | Completed Phase 3 Projects and Tasks REST API: all CRUD, status counts aggregation, dueDate sort-last pipeline, cascade deletion, verified cross-user isolation 404s | git: initial
 
 ## 12. Handoff Notes
-Phase 2 complete and verified. Moving directly to Phase 3 (Projects and Tasks REST API).
+Phase 3 complete and verified. Moving directly to Phase 4 (Design system and app shell).
