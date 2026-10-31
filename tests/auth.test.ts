@@ -6,6 +6,10 @@ import {
   objectIdSchema,
   passwordSchema,
   taskStatusSchema,
+  projectCreateSchema,
+  projectUpdateSchema,
+  taskCreateSchema,
+  taskQuerySchema,
 } from "../src/lib/validators";
 import bcrypt from "bcryptjs";
 
@@ -94,5 +98,57 @@ describe("Password and Validators", () => {
 
     const wrongMatches = await bcrypt.compare("WrongPassword", hash);
     expect(wrongMatches).toBe(false);
+  });
+
+  it("should validate project creation and update schemas", () => {
+    const validProject = projectCreateSchema.parse({
+      title: "  New Website Launch  ",
+      description: "  Full redesign and deployment  ",
+    });
+    expect(validProject.title).toBe("New Website Launch");
+    expect(validProject.description).toBe("Full redesign and deployment");
+
+    // Title cannot be empty
+    expect(() => projectCreateSchema.parse({ title: "   " })).toThrow();
+
+    // Partial update
+    const validUpdate = projectUpdateSchema.parse({ title: "Renamed Project" });
+    expect(validUpdate.title).toBe("Renamed Project");
+    expect(validUpdate.description).toBeUndefined();
+  });
+
+  it("should validate task create schema and transform ISO dates", () => {
+    const taskWithDate = taskCreateSchema.parse({
+      title: "Ship to production",
+      status: "in-progress",
+      dueDate: "2026-11-15T12:00:00.000Z",
+    });
+    expect(taskWithDate.title).toBe("Ship to production");
+    expect(taskWithDate.status).toBe("in-progress");
+    expect(taskWithDate.dueDate).toBeInstanceOf(Date);
+
+    const taskWithoutDate = taskCreateSchema.parse({
+      title: "Task with no date",
+      dueDate: "",
+    });
+    expect(taskWithoutDate.dueDate).toBeNull();
+  });
+
+  it("should validate and apply default query filter params", () => {
+    const defaultQuery = taskQuerySchema.parse({});
+    expect(defaultQuery.status).toBe("all");
+    expect(defaultQuery.sort).toBe("createdAt");
+    expect(defaultQuery.order).toBe("desc");
+
+    const customQuery = taskQuerySchema.parse({
+      status: "todo",
+      sort: "dueDate",
+      order: "asc",
+      q: "  deploy  ",
+    });
+    expect(customQuery.status).toBe("todo");
+    expect(customQuery.sort).toBe("dueDate");
+    expect(customQuery.order).toBe("asc");
+    expect(customQuery.q).toBe("deploy");
   });
 });
